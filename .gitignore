@@ -1,0 +1,20 @@
+# 敏感信息 - 不提交到 Git
+.env
+*.env
+config.ini
+secrets.py
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

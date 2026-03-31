@@ -13,7 +13,11 @@ import datetime
 
 
 # ─── 配置 ────────────────────────────────────────────────────────────────────
-API_KEY = "bce-v3/ALTAK-B2O2Qql79LCgj7B971hgK/e39d2d8103e1bce49bc00d32e8b9807d4a69ec3a"
+import os
+
+# API Key 从环境变量读取，避免硬编码泄露
+# 使用前请设置环境变量: set BAIDU_API_KEY=你的APIKey
+API_KEY = os.environ.get("BAIDU_API_KEY", "")
 API_URL = "https://qianfan.baidubce.com/v2/chat/completions"
 MODEL   = "ernie-4.0-8k"
 
@@ -279,7 +283,23 @@ class ChatApp:
         self._welcome()
 
     # ── 欢迎语 ───────────────────────────────────────────────────────────────
+    def _check_api_key(self):
+        """启动时检查 API Key，若未设置则弹窗输入"""
+        global API_KEY
+        if not API_KEY:
+            import tkinter.simpledialog as sd
+            key = sd.askstring(
+                "API Key 配置",
+                "请输入百度千帆 API Key：\n（也可设置环境变量 BAIDU_API_KEY）",
+                parent=self.root
+            )
+            if key and key.strip():
+                API_KEY = key.strip()
+            else:
+                messagebox.showwarning("提示", "未配置 API Key，将无法调用 AI 接口。")
+
     def _welcome(self):
+        self._check_api_key()
         self._append_sys(
             f"欢迎使用 AI 智能对话助手！\n"
             f"开发者：{STUDENT_NAME}（学号：{STUDENT_ID}）\n"
